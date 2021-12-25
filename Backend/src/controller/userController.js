@@ -56,20 +56,21 @@ const updateList = async (req, res) => {
     const { title, archived } = req.body;
     const { listId } = req.params;
 
-    if (!title && !archived) {
-      return res.status(404).send({
-        status: "404",
-        message: "Unknown error occurred",
-      });
-    }
+    // if (!title && !archived) {
+    //   return res.status(404).send({
+    //     status: "404",
+    //     message: "Unknown error occurred",
+    //   });
+    // }
 
     if (title) {
+      //set title
       const isArchived = await pool.query(
         "SELECT archived FROM list WHERE id=$1",
         [listId]
       );
 
-      if (isArchived === false) {
+      if (isArchived.rows[0].archived === false) {
         await pool.query("UPDATE list SET title=$1, updated=$2  WHERE id=$3", [
           title,
           new Date(),
@@ -82,8 +83,9 @@ const updateList = async (req, res) => {
         });
       }
     } else {
+      //set archived
       await pool.query("UPDATE list SET archived=$1, updated=$2  WHERE id=$3", [
-        archived === true ? true : false,
+        archived,
         new Date(),
         listId,
       ]);
@@ -105,9 +107,39 @@ const updateList = async (req, res) => {
 const createItem = async (req, res) => {
   try {
     const uuid = uuidv4().toString();
-    const data = req.body;
+    const { description } = req.body;
+    const { listId } = req.params;
 
-    return res.status(200);
+    if (!description) {
+      return res.status(404).send({
+        status: 404,
+        message: "Description not Found",
+      });
+    } else {
+      const isArchived = await pool.query(
+        "SELECT archived FROM list WHERE id=$1",
+        [listId]
+      );
+
+      if (isArchived.rows[0].archived === false) {
+        await pool.query(
+          "INSERT INTO item(id, list_id, description, completed, inserted, updated) VALUES($1,$2,$3,$4,$5,$6)",
+          [uuid, listId, description, false, new Date(), new Date()]
+        );
+      } else {
+        const obj = {
+          status: 400,
+          message: "Item Cannot be created for archived list",
+        };
+        return res.status(200).send(obj);
+      }
+
+      const obj = {
+        status: 200,
+        message: "Item Created Successfully",
+      };
+      return res.status(200).send(obj);
+    }
   } catch (error) {
     return res.status(400).send(error.message);
   }
@@ -115,10 +147,17 @@ const createItem = async (req, res) => {
 
 const getItems = async (req, res) => {
   try {
-    const uuid = uuidv4().toString();
-    const data = req.body;
+    const { listId } = req.params;
+    const items = await pool.query(`SELECT * FROM item WHERE list_id=$1`, [
+      listId,
+    ]);
 
-    return res.status(200);
+    return res.status(200).send({
+      status: 200,
+      data: {
+        list_items: items.rows,
+      },
+    });
   } catch (error) {
     return res.status(400).send(error.message);
   }
@@ -126,10 +165,18 @@ const getItems = async (req, res) => {
 
 const getItem = async (req, res) => {
   try {
-    const uuid = uuidv4().toString();
-    const data = req.body;
+    const { listId, itemId } = req.params;
+    const item = await pool.query(
+      `SELECT * FROM item WHERE list_id=$1 AND id=$2`,
+      [listId, itemId]
+    );
 
-    return res.status(200);
+    return res.status(200).send({
+      status: 200,
+      data: {
+        list_item: item.rows,
+      },
+    });
   } catch (error) {
     return res.status(400).send(error.message);
   }
@@ -137,10 +184,41 @@ const getItem = async (req, res) => {
 
 const updateItem = async (req, res) => {
   try {
-    const uuid = uuidv4().toString();
-    const data = req.body;
+    const { description, completed } = req.body;
+    const { listId, itemId } = req.params;
 
-    return res.status(200);
+    const isArchived = await pool.query(
+      "SELECT archived FROM list WHERE id=$1",
+      [listId]
+    );
+    if (isArchived.rows[0].archived === false) {
+      if (description) {
+        //set description
+
+        await pool.query(
+          "UPDATE item SET description=$1, updated=$2  WHERE id=$3",
+          [description, new Date(), itemId]
+        );
+      } else {
+        //set completed
+        await pool.query(
+          "UPDATE item SET completed=$1, updated=$2  WHERE id=$3",
+          [completed, new Date(), itemId]
+        );
+      }
+    } else {
+      const obj = {
+        status: 400,
+        message: "Unarchive list to perform this action",
+      };
+      return res.status(400).send(obj);
+    }
+
+    const obj = {
+      status: 200,
+      message: "Item Updated Successfully",
+    };
+    return res.status(200).send(obj);
   } catch (error) {
     return res.status(400).send(error.message);
   }
