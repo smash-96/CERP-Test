@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 
 // Dev API Url
-const baseUrl: string | undefined = process.env.REACT_APP_URL_PATH;
+// const baseUrl: string | undefined = process.env.REACT_APP_URL_PATH;
 // Production API Url
-// const baseUrl: string = "https://todo-list-cerp.herokuapp.com";
+const baseUrl: string = "https://todo-list-cerp.herokuapp.com";
 
 export const getLists = async (): Promise<AxiosResponse<ListApiDataType>> => {
   try {
