@@ -38,6 +38,7 @@ const getLists = async (req, res) => {
 
     return res.status(200).send({
       status: 200,
+      message: "Request Successful",
       data: {
         todo_lists: lists.rows,
       },
@@ -154,6 +155,7 @@ const getItems = async (req, res) => {
 
     return res.status(200).send({
       status: 200,
+      message: "Request Successfull",
       data: {
         list_items: items.rows,
       },
