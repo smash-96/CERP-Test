@@ -78,7 +78,7 @@ export const Todos = () => {
     e.preventDefault();
 
     addItem(task, listId!)
-      .then((response : any) => {
+      .then((response: any) => {
         if (response.data.status !== 200) {
           notifyError(response.data.message);
         } else {
@@ -100,7 +100,7 @@ export const Todos = () => {
 
     console.log("COMPLETE ITEMS", todo, updatedTodo);
     updateTodo(updatedTodo)
-      .then((response : any) => {
+      .then((response: any) => {
         console.log("RESPONSE", response);
         if (response.data.status !== 200) {
           notifyError(response.data.message);
@@ -126,7 +126,8 @@ export const Todos = () => {
         />
       )}
       <div className="App h-screen flex justify-center items-center bg-gray-100">
-        <section className="w-10/12 lg:w-1/2 max-w-2xl flex flex-col items-center">
+        <section className="relative w-10/12 lg:w-1/2 max-w-2xl flex flex-col items-center">
+          <h1 className="text-5xl mb-10">My Tasks</h1>
           <AddTodo
             handleChange={handleChange}
             handleSubmitTodo={handleSubmitTodo}

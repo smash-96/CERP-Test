@@ -130,6 +130,9 @@ const Lists = () => {
       )}
       <div className="App h-screen flex justify-center items-center bg-gray-100">
         <section className="w-10/12 lg:w-1/2 max-w-2xl flex flex-col items-center">
+          <h1 className="text-5xl mb-10">
+            My Lists
+          </h1>
           <AddList
             handleChange={handleChange}
             handleSubmitList={handleSubmitList}
