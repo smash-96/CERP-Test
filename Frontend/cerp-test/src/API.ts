@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const baseUrl: string = "http://localhost:8080";
+const baseUrl: string | undefined = process.env.REACT_APP_URL_PATH;
 
 export const getLists = async (): Promise<AxiosResponse<ListApiDataType>> => {
   try {
