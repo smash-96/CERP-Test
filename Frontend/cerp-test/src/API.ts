@@ -10,7 +10,7 @@ export const getLists = async (): Promise<AxiosResponse<ListApiDataType>> => {
 
     return lists;
   } catch (error: any) {
-    throw new Error(error);
+    return error.response
   }
 };
 
@@ -27,7 +27,7 @@ export const addList = async (
     );
     return saveList;
   } catch (error: any) {
-    throw new Error(error);
+    return error.response
   }
 };
 
@@ -45,7 +45,7 @@ export const updateList = async (
     );
     return updatedList;
   } catch (error: any) {
-    throw new Error(error);
+    return error.response
   }
 };
 
@@ -63,7 +63,7 @@ export const addItem = async (
     );
     return saveTodo;
   } catch (error: any) {
-    throw new Error(error);
+    return error.response
   }
 };
 
@@ -76,7 +76,7 @@ export const getTodos = async (
     );
     return todos;
   } catch (error: any) {
-    throw new Error(error);
+    return error.response
   }
 };
 
@@ -94,6 +94,6 @@ export const updateTodo = async (
     );
     return updatedList;
   } catch (error: any) {
-    throw new Error(error);
+    return error.response
   }
 };

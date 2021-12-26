@@ -1,12 +1,35 @@
 import { EditModalListProps } from "../types";
 import { useState } from "react";
 import { updateList } from "../API";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const EditModalList = ({
   isShowModal,
   hideModal,
   itemList,
   setDataFlag,
 }: EditModalListProps) => {
+  const notifyError = (error: string) =>
+    toast.error(error, {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+  const notifySuccess = (successMsg: string) =>
+    toast.success(successMsg, {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   const [editTitle, setEditTitle] = useState(itemList?.title);
 
   const updateListTile = () => {
@@ -16,11 +39,12 @@ const EditModalList = ({
       console.log("Edit LISTS", itemList, updatedList);
       updateList(updatedList)
         .then((response) => {
+          notifySuccess("List Title Updated");
           setDataFlag((prevState) => !prevState);
         })
         .catch((err: Error) => console.log("Edit List Error", err));
     }
-    hideModal()
+    hideModal();
   };
   return (
     <div

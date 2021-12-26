@@ -1,4 +1,4 @@
-import { Route, Switch, Redirect, BrowserRouter } from "react-router-dom";
+import { Route, Switch, BrowserRouter } from "react-router-dom";
 import Lists from "./Components/Lists";
 import { Todos } from "./Components/Todos";
 

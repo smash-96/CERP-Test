@@ -1,13 +1,35 @@
 import { EditModalTodoProps } from "../types";
 import { useState } from "react";
 import { updateTodo } from "../API";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const EditModalItem = ({
   isShowModal,
   hideModal,
   itemTodo,
   setDataFlag,
 }: EditModalTodoProps) => {
+  const notifyError = (error: string) =>
+    toast.error(error, {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+  const notifySuccess = (successMsg: string) =>
+    toast.success(successMsg, {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   const [editTitle, setEditTitle] = useState(itemTodo?.description);
 
   const updateTodoTitle = () => {
@@ -16,7 +38,12 @@ const EditModalItem = ({
 
       console.log("Edit ITEMS", itemTodo, updatedTodo);
       updateTodo(updatedTodo)
-        .then((response) => {
+        .then((response: any) => {
+          if (response.data.status !== 200) {
+            notifyError(response.data.message);
+          } else {
+            notifySuccess("Todo Updated");
+          }
           setDataFlag((prevState) => !prevState);
         })
         .catch((err: Error) => console.log("Edit Item Error", err));

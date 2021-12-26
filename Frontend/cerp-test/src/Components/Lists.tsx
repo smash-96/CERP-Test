@@ -72,13 +72,16 @@ const Lists = () => {
   const handleSubmitList = (e: FormEvent) => {
     e.preventDefault();
 
-    title &&
-      addList(title)
-        .then((response) => {
+    addList(title)
+      .then((response: any) => {
+        if (response.data.status !== 200) {
+          notifyError(response.data.message);
+        } else {
           notifySuccess("List Added Successfully");
-          setDataFlag((prevState) => !prevState);
-        })
-        .catch((err: Error) => console.log("ADD List Error", err));
+        }
+        setDataFlag((prevState) => !prevState);
+      })
+      .catch((err: Error) => console.log("ADD List Error", err));
 
     setTitle("");
   };
@@ -98,6 +101,12 @@ const Lists = () => {
     console.log("ARCHIVE LISTS", list, updatedList);
     updateList(updatedList)
       .then((response) => {
+        if (list.archived) {
+          notifySuccess("List Un-Archived");
+        } else {
+          notifySuccess("List Archived");
+        }
+
         setDataFlag((prevState) => !prevState);
       })
       .catch((err: Error) => console.log("Archive List Error", err));

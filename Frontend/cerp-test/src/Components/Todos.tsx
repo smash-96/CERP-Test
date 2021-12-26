@@ -77,13 +77,16 @@ export const Todos = () => {
   const handleSubmitTodo = (e: FormEvent) => {
     e.preventDefault();
 
-    task &&
-      addItem(task, listId!)
-        .then(() => {
+    addItem(task, listId!)
+      .then((response : any) => {
+        if (response.data.status !== 200) {
+          notifyError(response.data.message);
+        } else {
           notifySuccess("Item Added Successfully");
-          setDataFlag((prevState) => !prevState);
-        })
-        .catch((err: Error) => console.log("ADD Item Error", err));
+        }
+        setDataFlag((prevState) => !prevState);
+      })
+      .catch((err: Error) => console.log("ADD Item Error", err));
 
     setTask("");
   };
@@ -97,10 +100,14 @@ export const Todos = () => {
 
     console.log("COMPLETE ITEMS", todo, updatedTodo);
     updateTodo(updatedTodo)
-      .then(() => {
+      .then((response : any) => {
+        console.log("RESPONSE", response);
+        if (response.data.status !== 200) {
+          notifyError(response.data.message);
+        }
         setDataFlag((prevState) => !prevState);
       })
-      .catch((err: Error) => console.log("Complete Item Error", err));
+      .catch((err) => console.log("Complete Item Error", err));
   };
 
   const handleEditTodo = (todo: ITodo) => {
