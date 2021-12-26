@@ -1,38 +1,40 @@
-import { TodoProps } from "../types"
-
+import { TodoProps } from "../types";
+import { ReactComponent as EditIcon } from "../assets/svg/edit.svg";
 export const Row = ({
-  todo: { id, task, isCompleted },
-  handleCheckTodo,
-  handleDeleteTodo,
+  todo,
+  todo: { id, description, completed },
+  handleCompleteTodo,
+  handleEditTodo,
 }: TodoProps) => (
   <div
     className={`
         flex w-full p-4 mb-2 justify-between items-center
-       ${isCompleted ? "bg-gray-400 " : "bg-green-300"}
+       ${completed ? "bg-gray-400 " : "bg-green-300"}
       `}
   >
     <p
       className={`
           ml-2 text-xl font-sans font-medium
-          ${isCompleted ? "text-white line-through" : "text-gray-700"}
+          ${completed ? "text-white line-through" : "text-gray-700"}
         `}
     >
-      {task}
+      {description}
     </p>
     <div className="w-1/6 flex justify-between items-center mr-2">
       <button
-        aria-label="Delete a todo"
-        className="h-7 w-7 flex justify-center items-center bg-red-400 hover:bg-red-500 text-white font-bold  rounded"
-        onClick={() => handleDeleteTodo(id)}
+        type="submit"
+        aria-label="Edit list"
+        className="h-7 w-7 flex justify-center items-center text-black font-bold  rounded"
+        onClick={() => handleEditTodo(todo)}
       >
-        X
+        <EditIcon />
       </button>
       <input
         type="checkbox"
-        checked={isCompleted}
-        onChange={() => handleCheckTodo(id)}
+        checked={completed}
+        onChange={() => handleCompleteTodo(todo)}
         className="form-checkbox h-7 w-7"
       />
     </div>
   </div>
-)
+);

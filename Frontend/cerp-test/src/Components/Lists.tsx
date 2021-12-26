@@ -1,11 +1,20 @@
-import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
+import React, {
+  useEffect,
+  useState,
+  ChangeEvent,
+  FormEvent,
+  Fragment,
+} from "react";
+import { useHistory } from "react-router-dom";
 import { getLists, addList, updateList } from "../API";
 import ListItem from "./ListItem";
 import AddList from "./AddList";
-import ItemsModal from "./ItemsModal";
+import EditModalList from "./EditModalList";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const Lists = () => {
+  const history = useHistory();
+
   const notifyError = (error: string) =>
     toast.error(error, {
       position: "bottom-right",
@@ -31,7 +40,6 @@ const Lists = () => {
   const [itemList, setItemList] = useState<IList | undefined>(undefined);
   const [title, setTitle] = useState("");
   const [dataFlag, setDataFlag] = useState<boolean>(true);
-  const [editFlag, setEditFlag] = useState<boolean>(false);
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const showModal = () => setModalOpen(true);
@@ -77,8 +85,8 @@ const Lists = () => {
 
   const handleEditList = (list: IList) => {
     if (!list.archived) {
-      setEditFlag(true);
-      setTitle(list.title);
+      setItemList(list);
+      showModal();
     } else {
       notifyError("Archived List cannot be edited");
     }
@@ -96,35 +104,39 @@ const Lists = () => {
   };
 
   const handleForwardList = (list: IList) => {
-    setItemList(list);
-    showModal();
+    history.push({
+      pathname: `/item/${list.id}`,
+    });
   };
+
   return (
-    <>
+    <Fragment>
       {modalOpen && (
-        <ItemsModal
+        <EditModalList
           isShowModal={modalOpen}
           hideModal={hideModal}
           itemList={itemList}
+          setDataFlag={setDataFlag}
         />
       )}
-      <section className="w-10/12 lg:w-1/2 max-w-2xl flex flex-col items-center">
-        <AddList
-          handleChange={handleChange}
-          handleSubmitList={handleSubmitList}
-          title={title}
-        />
-        <div className="h-10" />
-        {lists.map((listItem) => (
-          <ListItem
-            key={listItem.id}
-            list={listItem}
-            handleEditList={handleEditList}
-            handleArchiveList={handleArchiveList}
-            handleForwardList={handleForwardList}
+      <div className="App h-screen flex justify-center items-center bg-gray-100">
+        <section className="w-10/12 lg:w-1/2 max-w-2xl flex flex-col items-center">
+          <AddList
+            handleChange={handleChange}
+            handleSubmitList={handleSubmitList}
+            title={title}
           />
-        ))}
-        {/* {!hasTodos && (
+          <div className="h-10" />
+          {lists.map((listItem) => (
+            <ListItem
+              key={listItem.id}
+              list={listItem}
+              handleEditList={handleEditList}
+              handleArchiveList={handleArchiveList}
+              handleForwardList={handleForwardList}
+            />
+          ))}
+          {/* {!hasTodos && (
         <p className="mb-5 text-xl text-red-500 uppercase">
           Please add a todo!
         </p>
@@ -134,19 +146,20 @@ const Lists = () => {
           [{remainingTodos} of {todosLength}] todos remaining
         </p>
       )} */}
-        <ToastContainer
-          position="bottom-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-      </section>
-    </>
+          <ToastContainer
+            position="bottom-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
+        </section>
+      </div>
+    </Fragment>
   );
 };
 

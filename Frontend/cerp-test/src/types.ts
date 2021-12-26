@@ -1,10 +1,4 @@
-import { ChangeEvent, FormEvent } from "react"
-
-export type Todo = {
-  id: string
-  task: string
-  isCompleted: boolean
-}
+import { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react"
 
 export type ListProps = {
   list: IList
@@ -21,9 +15,9 @@ export type AddListProps = {
 
 
 export type TodoProps = {
-  todo: Todo
-  handleCheckTodo: (id: string) => void
-  handleDeleteTodo: (id: string) => void
+  todo: ITodo
+  handleCompleteTodo: (todo: ITodo) => void
+  handleEditTodo: (todo: ITodo) => void
 }
 
 export type AddTodoProps = {
@@ -32,9 +26,16 @@ export type AddTodoProps = {
   handleChange: (e: ChangeEvent) => void
 }
 
-
-export type ItemsModalProps = {
-  hideModal: () => void
-  isShowModal: boolean
+export type EditModalListProps = {
   itemList: IList | undefined
+  isShowModal: boolean
+  setDataFlag: Dispatch<SetStateAction<boolean>>
+  hideModal: () => void
+}
+
+export type EditModalTodoProps = {
+  itemTodo: ITodo | undefined
+  isShowModal: boolean
+  setDataFlag: Dispatch<SetStateAction<boolean>>
+  hideModal: () => void
 }

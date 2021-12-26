@@ -50,19 +50,6 @@ const ListItem = ({
         >
           <ForwardIcon />
         </button>
-        {/* <button
-          aria-label="Delete a todo"
-          className="h-7 w-7 flex justify-center items-center bg-red-400 hover:bg-red-500 text-white font-bold  rounded"
-          //onClick={() => handleDeleteTodo(id)}
-        >
-          X
-        </button>
-        <input
-          type="checkbox"
-          //checked={isCompleted}
-          //onChange={() => handleCheckTodo(id)}
-          className="form-checkbox h-7 w-7"
-        /> */}
       </div>
     </div>
   );
